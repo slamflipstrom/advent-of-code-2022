@@ -1,5 +1,5 @@
 import { readFileSync } from "fs"
-const input = readFileSync("./01-puzzle-input.txt", "utf8")
+const input = readFileSync("./01/01-puzzle-input.txt", "utf8")
 
 const inputArray = input.split("\n")
 
