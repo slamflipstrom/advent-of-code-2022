@@ -22,9 +22,18 @@ const splitLine = (line: string): string[] => {
   return [first, second]
 }
 
-const findMatch = (firstHalf: string, secondHalf: string): string | void => {
-  const secondHalfArray = secondHalf.split("")
-  return secondHalfArray.find((char) => firstHalf.includes(char))
+const findLineMatch = (first: string, second: string): string | void => {
+  const secondArray = second.split("")
+  return secondArray.find((char) => first.includes(char))
+}
+
+const findGroupMatch = (group: string[]): string | void => {
+  const [first, second, third] = group
+
+  const firstArray = first.split("")
+  return firstArray.find(
+    (char) => second.includes(char) && third.includes(char)
+  )
 }
 
 const findPriorityValue = (char: string): number => {
@@ -32,17 +41,36 @@ const findPriorityValue = (char: string): number => {
   return idx + 1
 }
 
-const prioritizeItems = (): void => {
-  let sum = 0
+// part 2: find common char in each set of 3 lines, sum priority score
 
-  inputArray.forEach((line) => {
+const prioritizeItems = (): void => {
+  let itemSum = 0
+  let badgeSum = 0
+
+  let groupValue: string[] = [] // group = 3 lines
+  let groupMatch: string | void | null = null
+
+  inputArray.forEach((line, idx) => {
+    //on every 3rd line, evaluate the grouping
+    groupValue.push(line)
+
+    if ((idx + 1) % 3 === 0) {
+      groupMatch = findGroupMatch(groupValue)
+      const groupPriority = groupMatch ? findPriorityValue(groupMatch) : 0
+      badgeSum += groupPriority
+      groupValue = []
+    }
+
     const [first, second] = splitLine(line)
-    const match = findMatch(first, second)
-    const priority = match ? findPriorityValue(match) : 0
-    sum += priority
+    const lineMatch = findLineMatch(first, second)
+
+    const itemPriority = lineMatch ? findPriorityValue(lineMatch) : 0
+
+    itemSum += itemPriority
   })
 
-  console.log("sum:", sum)
+  // console.log('itemSum:', itemSum)
+  // console.log("badgeSum:", badgeSum)
 }
 
 prioritizeItems()
