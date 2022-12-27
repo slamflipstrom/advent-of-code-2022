@@ -22,6 +22,7 @@ const splitLine = (line: string): string[] => {
   return [first, second]
 }
 
+// todo: refactor the findMatch functions to handle n lines instead of fixed length
 const findLineMatch = (first: string, second: string): string | void => {
   const secondArray = second.split("")
   return secondArray.find((char) => first.includes(char))
@@ -41,8 +42,6 @@ const findPriorityValue = (char: string): number => {
   return idx + 1
 }
 
-// part 2: find common char in each set of 3 lines, sum priority score
-
 const prioritizeItems = (): void => {
   let itemSum = 0
   let badgeSum = 0
@@ -51,9 +50,9 @@ const prioritizeItems = (): void => {
   let groupMatch: string | void | null = null
 
   inputArray.forEach((line, idx) => {
-    //on every 3rd line, evaluate the grouping
     groupValue.push(line)
 
+    //on every 3rd line, evaluate the grouping
     if ((idx + 1) % 3 === 0) {
       groupMatch = findGroupMatch(groupValue)
       const groupPriority = groupMatch ? findPriorityValue(groupMatch) : 0
