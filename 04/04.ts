@@ -3,7 +3,14 @@ const input = readFileSync("./04/04-input.txt", "utf8")
 
 const inputArray = input.split("\n")
 
-const checkRange = (value: string, min: string, max: string): boolean => {
+const isInRange = (value: string, min: string, max: string): boolean => {
+  if (Number(value) >= Number(min) && Number(value) <= Number(max)) {
+    return true
+  }
+  return false
+}
+
+const hasOverlap = (value: string, min: string, max: string): boolean => {
   if (Number(value) >= Number(min) && Number(value) <= Number(max)) {
     return true
   }
@@ -12,6 +19,8 @@ const checkRange = (value: string, min: string, max: string): boolean => {
 
 const processInput = () => {
   let count = 0
+  let overlap = 0
+
   inputArray.forEach((item) => {
     //split item by comma
     const [first, second] = item.split(",")
@@ -19,21 +28,27 @@ const processInput = () => {
     const [secondMin, secondMax] = second.split("-")
 
     //check if first is in second range
-    if (checkRange(firstMin, secondMin, secondMax)) {
-      if (checkRange(firstMax, secondMin, secondMax)) {
+    if (isInRange(firstMin, secondMin, secondMax)) {
+      if (isInRange(firstMax, secondMin, secondMax)) {
         count++
         return
       }
     }
 
     //check if second is in first range
-    if (checkRange(secondMin, firstMin, firstMax)) {
-      if (checkRange(secondMax, firstMin, firstMax)) {
+    if (isInRange(secondMin, firstMin, firstMax)) {
+      overlap += countOverlap(firstMin, secondMax)
+      if (isInRange(secondMax, firstMin, firstMax)) {
         count++
       }
     }
+
+    if (hasOverlap(firstMin, secondMin, secondMax)) {
+      overlap++
+    }
   })
   console.log("count: ", count)
+  console.log("overlap:", overlap)
 }
 
 processInput()
