@@ -27,6 +27,17 @@ const processInput = () => {
     const [firstMin, firstMax] = first.split("-")
     const [secondMin, secondMax] = second.split("-")
 
+    //check for overlap
+    if (isInRange(firstMin, secondMin, secondMax)) {
+      overlap++
+    } else if (isInRange(firstMax, secondMin, secondMax)) {
+      overlap++
+    } else if (isInRange(secondMin, firstMin, firstMax)) {
+      overlap++
+    } else if (isInRange(secondMax, firstMin, firstMax)) {
+      overlap++
+    }
+
     //check if first is in second range
     if (isInRange(firstMin, secondMin, secondMax)) {
       if (isInRange(firstMax, secondMin, secondMax)) {
@@ -37,14 +48,9 @@ const processInput = () => {
 
     //check if second is in first range
     if (isInRange(secondMin, firstMin, firstMax)) {
-      overlap += countOverlap(firstMin, secondMax)
       if (isInRange(secondMax, firstMin, firstMax)) {
         count++
       }
-    }
-
-    if (hasOverlap(firstMin, secondMin, secondMax)) {
-      overlap++
     }
   })
   console.log("count: ", count)
