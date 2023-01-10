@@ -10,9 +10,45 @@ const isInRange = (value: string, min: string, max: string): boolean => {
   return false
 }
 
-const hasOverlap = (value: string, min: string, max: string): boolean => {
-  if (Number(value) >= Number(min) && Number(value) <= Number(max)) {
+const checkOverlap = (
+  firstMin: string,
+  firstMax: string,
+  secondMin: string,
+  secondMax: string
+): boolean => {
+  if (isInRange(firstMin, secondMin, secondMax)) {
     return true
+  }
+  if (isInRange(firstMax, secondMin, secondMax)) {
+    return true
+  }
+  if (isInRange(secondMin, firstMin, firstMax)) {
+    return true
+  }
+  if (isInRange(secondMax, firstMin, firstMax)) {
+    return true
+  }
+  return false
+}
+
+const checkRange = (
+  firstMin: string,
+  firstMax: string,
+  secondMin: string,
+  secondMax: string
+): boolean => {
+  //check if first is in second range
+  if (isInRange(firstMin, secondMin, secondMax)) {
+    if (isInRange(firstMax, secondMin, secondMax)) {
+      return true
+    }
+  }
+
+  //check if second is in first range
+  if (isInRange(secondMin, firstMin, firstMax)) {
+    if (isInRange(secondMax, firstMin, firstMax)) {
+      return true
+    }
   }
   return false
 }
@@ -28,30 +64,9 @@ const processInput = () => {
     const [secondMin, secondMax] = second.split("-")
 
     //check for overlap
-    if (isInRange(firstMin, secondMin, secondMax)) {
-      overlap++
-    } else if (isInRange(firstMax, secondMin, secondMax)) {
-      overlap++
-    } else if (isInRange(secondMin, firstMin, firstMax)) {
-      overlap++
-    } else if (isInRange(secondMax, firstMin, firstMax)) {
-      overlap++
-    }
+    checkOverlap(firstMin, firstMax, secondMin, secondMax) && overlap++
 
-    //check if first is in second range
-    if (isInRange(firstMin, secondMin, secondMax)) {
-      if (isInRange(firstMax, secondMin, secondMax)) {
-        count++
-        return
-      }
-    }
-
-    //check if second is in first range
-    if (isInRange(secondMin, firstMin, firstMax)) {
-      if (isInRange(secondMax, firstMin, firstMax)) {
-        count++
-      }
-    }
+    checkRange(firstMin, firstMax, secondMin, secondMax) && count++
   })
   console.log("count: ", count)
   console.log("overlap:", overlap)
